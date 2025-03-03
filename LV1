@@ -32,3 +32,33 @@ try:
 
 except ValueError:
     print("Greška, unos mora biti broj između 0.0 i 1.0")
+
+
+3.Zadatak
+brojevi = []
+
+while True:
+    unos = input("Unesiti broj ili 'Done' za završetak programa")
+
+    if unos.lower() == "done":
+        break
+
+try:
+        broj=float(unos)
+        brojevi.append(broj)
+    
+except ValueError:
+    print("Pogrešan unos, unesite ili broj ili 'Done' kako bi se završio program")
+
+    if brojevi:
+     print(f"Ukupno unesenih brojeva: {len(brojevi)}")
+     print(f"Srednja vrijednost brojeva: {sum(brojevi)} / {len(brojevi)}")
+     print(f"Minimalna vrijednost brojeva: {min(brojevi)}")
+     print(f"Maksimalna vrijednost brojeva: {max(brojevi)}")
+
+    brojevi.sort()
+    print(f"Sortirana lista: {brojevi}")
+else:
+    print("Niste unijeli broj")
+
+
