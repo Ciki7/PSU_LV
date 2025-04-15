@@ -1,0 +1,72 @@
+import numpy as np
+from tensorflow import keras
+from tensorflow.keras import layers
+from matplotlib import pyplot as plt
+from sklearn.metrics import confusion_matrix
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from sklearn.metrics import ConfusionMatrixDisplay
+
+# MNIST dataset
+(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+
+# TODO: Display a few images from the train dataset
+plt.figure(figsize=(10, 4))
+for i in range(10):
+    plt.subplot(2, 5, i + 1)
+    plt.imshow(x_train[i], cmap='gray')
+    plt.title(f"Label: {y_train[i]}")
+    plt.axis('off')
+plt.tight_layout()
+plt.show()
+
+# Scale pixel values to the range [0, 1]
+x_train_s = x_train.astype("float32") / 255
+x_test_s = x_test.astype("float32") / 255
+
+# Reshape images to 784-dimensional vectors
+x_train_s = x_train_s.reshape(60000, 784)
+x_test_s = x_test_s.reshape(10000, 784)
+
+# One-hot encode the labels (0, 1, ... 9)
+y_train_s = keras.utils.to_categorical(y_train, 10)
+y_test_s = keras.utils.to_categorical(y_test, 10)
+
+# TODO: Create the model using keras.Sequential(); display its structure using .summary()
+model = Sequential()
+model.add(Dense(units=64, activation='relu', input_shape=(784,)))
+model.add(Dense(units=10, activation='softmax'))
+model.summary()
+
+# TODO: Define the learning process characteristics using .compile()
+model.compile(loss='categorical_crossentropy',
+              optimizer='sgd',
+              metrics=['accuracy'])
+
+# TODO: Train the model using .fit()
+model.fit(x_train_s, y_train_s, epochs=25, batch_size=32)
+
+
+
+# TODO: Izracunajte tocnost mreze na skupu podataka za ucenje i skupu podataka za testiranje
+train_loss, train_acc = model.evaluate (x_train_s, y_train_s)
+test_loss, test_acc = model.evaluate (x_test_s, y_test_s)
+print(f"Train Accuracy: {train_acc:.4f}, Test Accuracy: {test_acc:.4f}")
+
+
+# TODO: Prikazite matricu zabune na skupu podataka za testiranje
+
+y_pred_probs = model.predict(x_test_s)
+y_pred = np.argmax(y_pred_probs, axis=1)
+
+cm = confusion_matrix(y_test, y_pred)
+
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=np.arange(10))
+disp.plot(cmap='Blues', values_format='d')
+plt.title("Matrica zabune na testnom skupu")
+plt.show()
+
+
+# TODO: Prikazi nekoliko primjera iz testnog skupa podataka koje je izgrađena mreza pogresno klasificirala
+
+
